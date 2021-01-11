@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Model} from 'react-native';
+import {FlatList} from 'react-native';
 
 import ListItem from './ListItem';
 

@@ -5,7 +5,12 @@ module.exports = {
     browser: true,
     es2020: true,
   },
-  extends: ['google', 'eslint:recommended', 'plugin:react/recommended', 'prettier/recommended'],
+  extends: [
+    'google',
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+  ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -23,7 +28,7 @@ module.exports = {
     'react/jsx-uses-vars': 'error',
     'no-console': 0,
     'require-jsdoc': 0,
-    'prettier/prettier': ['error'],
+    'prettier/prettier': 'error',
   },
   settings: {
     react: {
@@ -39,13 +44,13 @@ module.exports = {
     propWrapperFunctions: [
       // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
       'forbidExtraProps',
-      { property: 'freeze', object: 'Object' },
-      { property: 'myFavoriteWrapper' },
+      {property: 'freeze', object: 'Object'},
+      {property: 'myFavoriteWrapper'},
     ],
     linkComponents: [
       // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
       'Hyperlink',
-      { name: 'Link', linkAttribute: 'to' },
+      {name: 'Link', linkAttribute: 'to'},
     ],
   },
 };
