@@ -1,12 +1,5 @@
 import React, {useState} from 'react';
-import {
-  TouchableOpacity,
-  Image,
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-} from 'react-native';
+import {TouchableOpacity, Image, Text, View, Modal} from 'react-native';
 import PropTypes from 'prop-types';
 
 const ListItem = ({singleMedia}) => {
