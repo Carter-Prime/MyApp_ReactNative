@@ -1,21 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import GlobalStyles from './GlobalStyles';
+import { SafeAreaView } from 'react-native';
+import List from './components/List';
 
 const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <SafeAreaView style={GlobalStyles.androidSafeArea}>
+      <List />
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;
