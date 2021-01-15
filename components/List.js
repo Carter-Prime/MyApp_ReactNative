@@ -1,27 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {FlatList} from 'react-native';
 
+import {useLoadMedia} from './hooks/ApiHooks';
 import ListItem from './ListItem';
 
-const url = 'http://media.mw.metropolia.fi/wbma/';
-
 const List = () => {
-  const [mediaArray, setMediaArray] = useState([]);
-
-  const loadMedia = async () => {
-    try {
-      const response = await fetch(url);
-      const json = await response.json();
-      console.log("'response json data:", json);
-      setMediaArray(json);
-    } catch (error) {
-      console.error('loadMedia error', error);
-    }
-  };
-
-  useEffect(() => {
-    loadMedia();
-  }, []);
+  const mediaArray = useLoadMedia();
   return (
     <>
       <FlatList

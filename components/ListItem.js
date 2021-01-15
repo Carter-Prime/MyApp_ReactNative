@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 
+const url = 'http://media.mw.metropolia.fi/wbma/uploads/';
+
 const ListItem = ({singleMedia}) => {
   const [modelVisible, setModelVisible] = useState(false);
   return (
@@ -19,7 +21,7 @@ const ListItem = ({singleMedia}) => {
       >
         <Image
           style={styles.image}
-          source={{uri: singleMedia.thumbnails.w160}}
+          source={{uri: url + singleMedia.thumbnails.w160}}
         />
         <View style={styles.textContainer}>
           <Text style={styles.title}>{singleMedia.title}</Text>
@@ -33,7 +35,7 @@ const ListItem = ({singleMedia}) => {
         >
           <Image
             style={styles.enlargedImage}
-            source={{uri: singleMedia.thumbnails.w160}}
+            source={{uri: url + singleMedia.thumbnails.w320}}
           />
         </TouchableOpacity>
       </Modal>
@@ -49,13 +51,16 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   image: {
-    width: '50%',
+    width: 160,
+    height: 160,
     alignItems: 'center',
     justifyContent: 'center',
   },
   enlargedImage: {
-    width: '90%',
-    height: '90%',
+    width: 320,
+    height: 320,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   modalView: {
