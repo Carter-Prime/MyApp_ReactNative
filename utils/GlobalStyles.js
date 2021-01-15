@@ -1,4 +1,5 @@
-import { StyleSheet, Platform, StatusBar } from 'react-native';
+import {StyleSheet, Platform, StatusBar} from 'react-native';
+
 export default StyleSheet.create({
   androidSafeArea: {
     flex: 1,
