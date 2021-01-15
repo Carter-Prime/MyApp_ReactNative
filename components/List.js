@@ -3,8 +3,7 @@ import {FlatList} from 'react-native';
 
 import ListItem from './ListItem';
 
-const url =
-  'https://raw.githubusercontent.com/mattpe/wbma/master/docs/assets/test.json';
+const url = 'http://media.mw.metropolia.fi/wbma/';
 
 const List = () => {
   const [mediaArray, setMediaArray] = useState([]);
