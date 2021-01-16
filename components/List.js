@@ -10,6 +10,7 @@ const List = () => {
     <>
       <FlatList
         data={mediaArray}
+        horizontal={true}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => <ListItem singleMedia={item} />}
       />
