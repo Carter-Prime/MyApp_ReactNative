@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   getFocusedRouteNameFromRoute,
@@ -6,7 +6,8 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {Home, Profile, Single} from '../views/index';
+import {Home, Profile, Single, Login} from '../views/index';
+import {MainContext} from '../contexts/MainContext';
 import ActionBarIcon from '../components/ActionBarIcon';
 
 const Tab = createBottomTabNavigator();
@@ -59,7 +60,7 @@ const TabScreen = () => {
 };
 
 const StackScreen = () => {
-  const isLoggedIn = false;
+  const [isLoggedIn] = useContext(MainContext);
   return (
     <Stack.Navigator>
       {isLoggedIn ? (
