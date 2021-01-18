@@ -1,48 +1,30 @@
-import React, {useState} from 'react';
-import {
-  TouchableOpacity,
-  Image,
-  Text,
-  View,
-  Modal,
-  StyleSheet,
-} from 'react-native';
+import React from 'react';
+import {TouchableOpacity, Image, Text, View, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
-import Icon from 'react-native-vector-icons/Feather';
 
 const url = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
-const ListItem = ({singleMedia}) => {
-  const [modelVisible, setModelVisible] = useState(false);
+const ListItem = ({singleMedia, navigation}) => {
   return (
-    <>
-      <View style={styles.item}>
-        <TouchableOpacity onPress={() => setModelVisible(true)}>
-          <Image
-            style={styles.image}
-            source={{uri: url + singleMedia.thumbnails.w160}}
-          />
-        </TouchableOpacity>
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>{singleMedia.title}</Text>
-          <Text style={styles.description}>{singleMedia.description}</Text>
-        </View>
+    <View style={styles.item}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Single', {
+            file: singleMedia.filename,
+            title: singleMedia.title,
+          });
+        }}
+      >
+        <Image
+          style={styles.image}
+          source={{uri: url + singleMedia.thumbnails.w160}}
+        />
+      </TouchableOpacity>
+      <View style={styles.textContainer}>
+        <Text style={styles.title}>{singleMedia.title}</Text>
+        <Text style={styles.description}>{singleMedia.description}</Text>
       </View>
-      <Modal animationType="slide" visible={modelVisible}>
-        <View style={styles.modalView}>
-          <TouchableOpacity
-            onPress={() => setModelVisible(false)}
-            style={styles.iconContainer}
-          >
-            <Icon name="x" size={40} style={styles.closeIcon} />
-          </TouchableOpacity>
-          <Image
-            style={styles.enlargedImage}
-            source={{uri: url + singleMedia.thumbnails.w640}}
-          />
-        </View>
-      </Modal>
-    </>
+    </View>
   );
 };
 
@@ -108,6 +90,7 @@ const styles = StyleSheet.create({
 
 ListItem.propTypes = {
   singleMedia: PropTypes.object.isRequired,
+  navigation: PropTypes.object,
 };
 
 export default ListItem;
