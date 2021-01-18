@@ -59,10 +59,27 @@ const TabScreen = () => {
 };
 
 const StackScreen = () => {
+  const isLoggedIn = false;
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={TabScreen} options={HeaderOptions} />
-      <Stack.Screen name="Single" component={Single} options={HeaderOptions} />
+      {isLoggedIn ? (
+        <>
+          <Stack.Screen
+            name="Home"
+            component={TabScreen}
+            options={HeaderOptions}
+          />
+          <Stack.Screen
+            name="Single"
+            component={Single}
+            options={HeaderOptions}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Login" component={Login} />
+        </>
+      )}
     </Stack.Navigator>
   );
 };
