@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import List from '../components/List';
+import PropTypes from 'prop-types';
 
 const Home = (props) => {
   const {navigation} = props;
@@ -64,5 +65,9 @@ const styles = StyleSheet.create({
     elevation: 17,
   },
 });
+
+Home.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default Home;

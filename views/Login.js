@@ -7,6 +7,7 @@ import {MainContext} from '../contexts/MainContext';
 
 const Login = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
+  console.log(isLoggedIn);
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
