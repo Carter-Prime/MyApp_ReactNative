@@ -75,4 +75,31 @@ const useLogin = () => {
   return {postLogin, checkToken};
 };
 
-export {useLoadMedia, useLogin};
+const useRegister = () => {
+  const postRegister = async (inputs) => {
+    console.log('trying to create user', inputs);
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+    };
+    try {
+      const registerResponse = await fetch(apiUrl + 'users', fetchOptions);
+      const registerJson = await registerResponse.json();
+      console.log('register resp', registerJson);
+      if (registerResponse.ok) {
+        return registerJson;
+      } else {
+        throw new Error(registerJson.message + ': ' + registerJson.error);
+      }
+    } catch (e) {
+      console.log('ApiHooks register', e.message);
+      throw new Error(e.message);
+    }
+  };
+  return {postRegister};
+};
+
+export {useLoadMedia, useLogin, useRegister};
