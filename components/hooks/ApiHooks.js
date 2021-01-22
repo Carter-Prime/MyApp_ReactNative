@@ -29,4 +29,50 @@ const useLoadMedia = () => {
   return mediaArray;
 };
 
-export {useLoadMedia};
+const useLogin = () => {
+  const postLogin = async (userCredentials) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userCredentials),
+    };
+    try {
+      const loginResponse = await fetch(apiUrl + 'login', options);
+      const userDataJson = await loginResponse.json();
+      console.log(loginResponse.status);
+      if (loginResponse.ok) {
+        return userDataJson;
+      } else {
+        throw new Error(userDataJson.message);
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  const checkToken = async (token) => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      const checkTokenResponse = await fetch(apiUrl + 'users/user', options);
+      const userData = checkTokenResponse.json();
+      if (checkTokenResponse.ok) {
+        return userData;
+      } else {
+        throw new Error(userData.message);
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
+  return {postLogin, checkToken};
+};
+
+export {useLoadMedia, useLogin};

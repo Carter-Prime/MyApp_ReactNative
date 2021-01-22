@@ -12,15 +12,7 @@ import ActionBarIcon from '../components/ActionBarIcon';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-const menuIcon = () => {
-  return <ActionBarIcon iconName={'menu'} />;
-};
-const loginIcon = () => {
-  return <ActionBarIcon iconName={'log-in'} />;
-};
-const backIcon = () => {
-  return <ActionBarIcon iconName={'arrow-left'} />;
-};
+
 const HeaderOptions = ({route}) => {
   if (route.name === 'Single') {
     return {
@@ -32,7 +24,9 @@ const HeaderOptions = ({route}) => {
       headerTitleStyle: {
         fontWeight: 'bold',
       },
-      headerLeft: backIcon,
+      headerLeft: () => {
+        <ActionBarIcon iconName={'arrow-left'} />;
+      },
     };
   } else {
     return {
@@ -44,8 +38,9 @@ const HeaderOptions = ({route}) => {
       headerTitleStyle: {
         fontWeight: 'bold',
       },
-      headerLeft: menuIcon,
-      headerRight: loginIcon,
+      headerLeft: () => {
+        <ActionBarIcon iconName={'menu'} />;
+      },
     };
   }
 };

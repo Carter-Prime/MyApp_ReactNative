@@ -4,29 +4,49 @@ import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {MainContext} from '../contexts/MainContext';
+import {useLogin} from '../components/hooks/ApiHooks';
 
 const Login = ({navigation}) => {
   const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
   console.log(isLoggedIn);
 
+  const {postLogin, checkToken} = useLogin();
+
+  const logIn = async () => {
+    const testUser = {
+      username: 'michaejc',
+      password: 'Test123',
+    };
+    try {
+      const userData = await postLogin(testUser);
+      setIsLoggedIn(true);
+      await AsyncStorage.setItem('userToken', userData.token);
+    } catch (error) {
+      console.error('postLogin error', error);
+      // Todo: add user notification here about login error
+    }
+  };
+
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
     console.log('token', userToken);
-    if (userToken === 'abc') {
-      setIsLoggedIn(true);
-      navigation.navigate('Home');
+    if (userToken) {
+      try {
+        await checkToken(userToken);
+        setIsLoggedIn(true);
+        navigation.navigate('Home');
+      } catch (error) {
+        console.error('getToken error', error);
+      }
     }
   };
 
   useEffect(() => {
     getToken();
+    if (isLoggedIn) {
+      navigation.navigate('Home');
+    }
   }, []);
-
-  const logIn = async () => {
-    setIsLoggedIn(true);
-    await AsyncStorage.setItem('userToken', 'abc');
-    navigation.navigate('Home');
-  };
 
   return (
     <View style={styles.container}>
