@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 
 const ImageHeader = ({backgroundImage, titleText}) => {
   return (
-    <ImageBackground source={backgroundImage} style={styles.titleBackground}>
+    <ImageBackground
+      source={backgroundImage}
+      style={styles.titleBackground}
+      imageStyle={styles.image}
+    >
       <Text style={styles.titleText}>{titleText}</Text>
     </ImageBackground>
   );
@@ -15,6 +19,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
   },
+
+  image: {
+    borderBottomRightRadius: 60,
+  },
+
   titleText: {
     width: '100%',
     position: 'absolute',

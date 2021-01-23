@@ -5,57 +5,85 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import PropTypes from 'prop-types';
 
 import {Home, Profile, Single, Login} from '../views/index';
 import {MainContext} from '../contexts/MainContext';
 import ActionBarIcon from '../components/ActionBarIcon';
+import Icon from 'react-native-vector-icons/Feather';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const HeaderOptions = ({route}) => {
+const HeaderOptions = ({navigation, route}) => {
+  const backArrow = () => (
+    <ActionBarIcon
+      iconName={'arrow-left'}
+      color="white"
+      onBack={() => {
+        navigation.goBack();
+      }}
+    />
+  );
+
   if (route.name === 'Single') {
     return {
       headerTitle: getFocusedRouteNameFromRoute(route),
       headerStyle: {
-        backgroundColor: '#560266',
+        backgroundColor: '#55AAAA',
+        height: 50,
       },
       headerTintColor: 'white',
       headerTitleStyle: {
         fontWeight: 'bold',
       },
-      headerLeft: () => {
-        <ActionBarIcon iconName={'arrow-left'} />;
-      },
+      headerLeft: backArrow,
     };
   } else {
     return {
       headerTitle: getFocusedRouteNameFromRoute(route),
       headerStyle: {
-        backgroundColor: '#560266',
+        backgroundColor: '#55AAAA',
+        height: 50,
       },
       headerTintColor: 'white',
       headerTitleStyle: {
         fontWeight: 'bold',
-      },
-      headerLeft: () => {
-        <ActionBarIcon iconName={'menu'} />;
       },
     };
   }
 };
 
 const TabScreen = () => {
+  const screenOptions = ({route}) => ({
+    tabBarIcon: function tabIcons({focused, color}) {
+      let iconName;
+
+      if (route.name === 'Home') {
+        iconName = focused ? 'home' : 'home';
+      } else if (route.name === 'Profile') {
+        iconName = focused ? 'user' : 'user';
+      }
+
+      return <Icon name={iconName} size={30} color={color} />;
+    },
+  });
+
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={screenOptions}
+      tabBarOptions={{
+        activeTintColor: '#55AAAA',
+        inactiveTintColor: 'gray',
+      }}
+    >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 };
-
 const StackScreen = () => {
-  const [isLoggedIn] = useContext(MainContext);
+  const {isLoggedIn} = useContext(MainContext);
   return (
     <Stack.Navigator>
       {isLoggedIn ? (
@@ -65,6 +93,7 @@ const StackScreen = () => {
             component={TabScreen}
             options={HeaderOptions}
           />
+
           <Stack.Screen
             name="Single"
             component={Single}
@@ -86,6 +115,11 @@ const Navigator = () => {
       <StackScreen />
     </NavigationContainer>
   );
+};
+
+TabScreen.propTypes = {
+  focused: PropTypes.string,
+  color: PropTypes.string,
 };
 
 export default Navigator;

@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
     elevation: 5,
-    backgroundColor: '#560266',
+    backgroundColor: '#55AAAA',
     marginBottom: 10,
   },
   image: {
@@ -50,12 +50,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 
-  modalView: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    backgroundColor: '#560266',
-  },
   iconContainer: {
     position: 'absolute',
     top: 10,

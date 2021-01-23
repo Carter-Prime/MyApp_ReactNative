@@ -1,42 +1,31 @@
 import React, {useContext, useEffect} from 'react';
-import {StyleSheet, View, Text, Button} from 'react-native';
+import {
+  StyleSheet,
+  ImageBackground,
+  Text,
+  KeyboardAvoidingView,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {MainContext} from '../contexts/MainContext';
-import {useLogin} from '../components/hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import {useLogin} from '../components/hooks/ApiHooks';
 
 const Login = ({navigation}) => {
-  const [isLoggedIn, setIsLoggedIn] = useContext(MainContext);
+  const {isLoggedIn, setIsLoggedIn, setUser, loaded} = useContext(MainContext);
   console.log(isLoggedIn);
-
-  const {postLogin, checkToken} = useLogin();
-
-  const logIn = async () => {
-    const testUser = {
-      username: 'michaejc',
-      password: 'Test123',
-    };
-    try {
-      const userData = await postLogin(testUser);
-      setIsLoggedIn(true);
-      await AsyncStorage.setItem('userToken', userData.token);
-    } catch (error) {
-      console.error('postLogin error', error);
-      // Todo: add user notification here about login error
-    }
-  };
+  const {checkToken} = useLogin();
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
     console.log('token', userToken);
     if (userToken) {
       try {
-        await checkToken(userToken);
+        const userData = await checkToken(userToken);
         setIsLoggedIn(true);
-        navigation.navigate('Home');
+        setUser(userData);
       } catch (error) {
         console.error('getToken error', error);
       }
@@ -45,26 +34,39 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     getToken();
-    if (isLoggedIn) {
-      navigation.navigate('Home');
-    }
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <Text>Login</Text>
-      <LoginForm navigation={navigation} />
-      <RegisterForm navigation={navigation} />
-    </View>
-  );
+  if (!loaded) {
+    return null;
+  } else {
+    return (
+      <KeyboardAvoidingView style={styles.flexGrowOne}>
+        <ImageBackground
+          source={require('../assets/image/watercolor-blue.png')}
+          style={styles.container}
+        >
+          <Text style={styles.loginTitle}>Login</Text>
+          <LoginForm navigation={navigation} />
+          <RegisterForm navigation={navigation} />
+        </ImageBackground>
+      </KeyboardAvoidingView>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
+  flexGrowOne: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
+  },
+
+  loginTitle: {
+    fontSize: 60,
+    fontFamily: 'McLarenRegular',
   },
 });
 
