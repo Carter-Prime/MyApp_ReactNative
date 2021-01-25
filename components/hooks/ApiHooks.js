@@ -2,6 +2,14 @@ import {useState, useEffect} from 'react';
 
 const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
 
+const doFetch = async (url, options = {}) => {
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    throw new Error('doFetch failed');
+  }
+  return await response.json();
+};
+
 const useLoadMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
 
@@ -39,14 +47,8 @@ const useLogin = () => {
       body: JSON.stringify(userCredentials),
     };
     try {
-      const loginResponse = await fetch(apiUrl + 'login', options);
-      const userDataJson = await loginResponse.json();
-      console.log(loginResponse.status);
-      if (loginResponse.ok) {
-        return userDataJson;
-      } else {
-        throw new Error(userDataJson.message);
-      }
+      const userDataJson = await doFetch(apiUrl + 'login', options);
+      return userDataJson;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -102,4 +104,23 @@ const useUser = () => {
   return {postRegister, checkToken};
 };
 
-export {useLoadMedia, useLogin, useUser};
+const useTag = () => {
+  const getAvatar = async (tag, token) => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      const filesByTagResponse = await doFetch(apiUrl + 'tags/' + tag, options);
+      console.log('file name is: ', filesByTagResponse[0].filename);
+      return filesByTagResponse[0].filename;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+  return {getAvatar};
+};
+
+export {useLoadMedia, useLogin, useUser, useTag};

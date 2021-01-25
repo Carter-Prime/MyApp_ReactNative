@@ -1,51 +1,43 @@
 import React from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  Image,
-  ImageBackground,
-} from 'react-native';
+import {View, SafeAreaView, ActivityIndicator} from 'react-native';
+import {Text, Card, Icon} from 'react-native-elements';
 import PropTypes from 'prop-types';
 
 const url = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
 const Single = ({route, navigation}) => {
-  const {file, title} = route.params;
+  const {file} = route.params;
+  console.log(file);
   return (
-    <SafeAreaView style={styles.safecontainer}>
-      <ImageBackground
-        source={require('../assets/image/watercolor-blue.png')}
-        style={styles.container}
-      >
-        <Text style={styles.title}>{title}</Text>
-        <Image style={styles.image} source={{uri: url + file}} />
-      </ImageBackground>
+    <SafeAreaView
+      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
+    >
+      <Card>
+        <Card.Image
+          source={{uri: url + file.filename}}
+          style={{
+            width: 400,
+            height: 400,
+          }}
+          PlaceholderContent={<ActivityIndicator />}
+        />
+        <Card.Divider />
+        <Card.Title style={{fontSize: 32}}>{file.title}</Card.Title>
+        <View style={{flexDirection: 'row', padding: 10}}>
+          <Icon name="book" size={32} />
+          <Text
+            style={{
+              flex: 1,
+              marginLeft: 10,
+            }}
+          >
+            {file.description}{' '}
+          </Text>
+        </View>
+      </Card>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  safecontainer: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 40,
-  },
-  image: {
-    width: 300,
-    height: 300,
-  },
-  title: {
-    fontSize: 20,
-    color: '#560266',
-    marginBottom: 10,
-  },
-});
 
 Single.propTypes = {
   route: PropTypes.object,

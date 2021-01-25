@@ -1,10 +1,6 @@
 import React, {useContext, useEffect} from 'react';
-import {
-  StyleSheet,
-  ImageBackground,
-  Text,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {KeyboardAvoidingView, StatusBar} from 'react-native';
+import {Text} from 'react-native-elements';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -40,35 +36,21 @@ const Login = ({navigation}) => {
     return null;
   } else {
     return (
-      <KeyboardAvoidingView style={styles.flexGrowOne}>
-        <ImageBackground
-          source={require('../assets/image/watercolor-blue.png')}
-          style={styles.container}
-        >
-          <Text style={styles.loginTitle}>Login</Text>
-          <LoginForm navigation={navigation} />
-          <RegisterForm navigation={navigation} />
-        </ImageBackground>
+      <KeyboardAvoidingView>
+        <StatusBar backgroundColor="black" barStyle="light-content" />
+        <Text h4 h4Style={{textAlign: 'center'}}>
+          Login
+        </Text>
+        <LoginForm navigation={navigation} />
+
+        <Text h4 h4Style={{textAlign: 'center'}}>
+          Register
+        </Text>
+        <RegisterForm navigation={navigation} />
       </KeyboardAvoidingView>
     );
   }
 };
-
-const styles = StyleSheet.create({
-  flexGrowOne: {
-    flexGrow: 1,
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-
-  loginTitle: {
-    fontSize: 60,
-    fontFamily: 'McLarenRegular',
-  },
-});
 
 Login.propTypes = {
   navigation: PropTypes.object,

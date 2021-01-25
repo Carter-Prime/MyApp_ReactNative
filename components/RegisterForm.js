@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
-import {Alert, Button, View, StyleSheet} from 'react-native';
+import {Alert, View} from 'react-native';
+import {Button} from 'react-native-elements';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -30,52 +31,32 @@ const RegisterForm = ({navigation}) => {
   };
 
   return (
-    <View style={styles.formContainer}>
+    <View>
       <FormTextInput
-        style={styles.form}
         autoCapitalize="none"
         placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
       />
       <FormTextInput
-        style={styles.form}
         autoCapitalize="none"
         placeholder="password"
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />
       <FormTextInput
-        style={styles.form}
         autoCapitalize="none"
         placeholder="email"
         onChangeText={(txt) => handleInputChange('email', txt)}
       />
       <FormTextInput
-        style={styles.form}
         autoCapitalize="none"
         placeholder="full name"
         onChangeText={(txt) => handleInputChange('full_name', txt)}
       />
-      <Button style={styles.btn} title="Register" onPress={doRegister} />
+      <Button title="Register" raised onPress={doRegister} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  formContainer: {
-    height: 300,
-    justifyContent: 'space-evenly',
-    padding: 10,
-  },
-  form: {
-    width: 200,
-    backgroundColor: 'white',
-    padding: 10,
-  },
-  btn: {
-    margin: 10,
-  },
-});
 
 RegisterForm.propTypes = {
   navigation: PropTypes.object,
