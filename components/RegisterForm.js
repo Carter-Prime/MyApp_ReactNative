@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {MainContext} from '../contexts/MainContext';
-import {useRegister, useLogin} from './hooks/ApiHooks';
+import {useUser, useLogin} from './hooks/ApiHooks';
 import FormTextInput from './FormTextInput';
 import useSignUpForm from './hooks/RegisterHooks';
 
 const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useSignUpForm();
-  const {postRegister} = useRegister();
+  const {postRegister} = useUser();
   const {postLogin} = useLogin();
 
   const doRegister = async () => {

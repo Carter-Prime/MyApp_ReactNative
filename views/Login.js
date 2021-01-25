@@ -11,12 +11,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainContext} from '../contexts/MainContext';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {useLogin} from '../components/hooks/ApiHooks';
+import {useUser} from '../components/hooks/ApiHooks';
 
 const Login = ({navigation}) => {
   const {isLoggedIn, setIsLoggedIn, setUser, loaded} = useContext(MainContext);
   console.log(isLoggedIn);
-  const {checkToken} = useLogin();
+  const {checkToken} = useUser();
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
