@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react';
-import {KeyboardAvoidingView, StatusBar} from 'react-native';
-import {Text} from 'react-native-elements';
+import {KeyboardAvoidingView, StatusBar, StyleSheet} from 'react-native';
+import {Text, Card} from 'react-native-elements';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -36,21 +36,35 @@ const Login = ({navigation}) => {
     return null;
   } else {
     return (
-      <KeyboardAvoidingView>
+      <KeyboardAvoidingView style={styles.container}>
         <StatusBar backgroundColor="black" barStyle="light-content" />
-        <Text h4 h4Style={{textAlign: 'center'}}>
-          Login
-        </Text>
-        <LoginForm navigation={navigation} />
-
-        <Text h4 h4Style={{textAlign: 'center'}}>
-          Register
-        </Text>
-        <RegisterForm navigation={navigation} />
+        <Card containerStyle={styles.loginContainer}>
+          <Card.Title>Login</Card.Title>
+          <Card.Divider />
+          <LoginForm navigation={navigation} />
+        </Card>
+        <Card containerStyle={styles.registerContainer}>
+          <Card.Title>Registration</Card.Title>
+          <Card.Divider />
+          <RegisterForm navigation={navigation} />
+        </Card>
       </KeyboardAvoidingView>
     );
   }
 };
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginContainer: {
+    width: '80%',
+  },
+  registerContainer: {
+    width: '80%',
+  },
+});
 
 Login.propTypes = {
   navigation: PropTypes.object,

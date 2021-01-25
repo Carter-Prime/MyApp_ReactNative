@@ -105,22 +105,16 @@ const useUser = () => {
 };
 
 const useTag = () => {
-  const getAvatar = async (tag, token) => {
-    const options = {
-      method: 'GET',
-      headers: {
-        'x-access-token': token,
-      },
-    };
+  const getFilesByTag = async (tag) => {
     try {
-      const filesByTagResponse = await doFetch(apiUrl + 'tags/' + tag, options);
-      console.log('file name is: ', filesByTagResponse[0].filename);
-      return filesByTagResponse[0].filename;
+      const filesByTag = await doFetch(apiUrl + 'tags/' + tag);
+      console.log(filesByTag);
+      return filesByTag;
     } catch (error) {
       throw new Error(error.message);
     }
   };
-  return {getAvatar};
+  return {getFilesByTag};
 };
 
 export {useLoadMedia, useLogin, useUser, useTag};

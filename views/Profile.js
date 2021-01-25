@@ -10,8 +10,8 @@ const url = 'http://media.mw.metropolia.fi/wbma/uploads/';
 
 const Profile = ({navigation}) => {
   const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
-  const {getAvatar} = useTag();
-  const [avatarImg, setAvatarImg] = useState('');
+  const {getFilesByTag} = useTag();
+  const [avatarImg, setAvatarImg] = useState('http://placekitten.com/640');
 
   console.log('profile', isLoggedIn);
   console.log('profile userData: ', user);
@@ -22,10 +22,9 @@ const Profile = ({navigation}) => {
     navigation.navigate('Login');
   };
   const loadAvatar = async () => {
-    const tag = 'Avatar_' + user.user_id;
     try {
-      const getAvatarImage = await getAvatar(tag, user.token);
-      setAvatarImg(getAvatarImage);
+      const getAvatarImage = await getFilesByTag('Avatar_' + user.user_id);
+      setAvatarImg(url + getAvatarImage.pop().filename);
     } catch (error) {
       console.error('getAvatar error', error);
     }
@@ -43,7 +42,7 @@ const Profile = ({navigation}) => {
         <Text style={styles.text}>Username: {user.username}</Text>
       </View>
 
-      <Avatar square source={{uri: url + avatarImg}} size={300} />
+      <Avatar square source={{uri: avatarImg}} size={300} />
       <View
         style={{
           flex: 0.15,
