@@ -11,7 +11,7 @@ const url = 'http://media.mw.metropolia.fi/wbma/uploads/';
 const Profile = ({navigation}) => {
   const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
   const {getFilesByTag} = useTag();
-  const [avatarImg, setAvatarImg] = useState('http://placekitten.com/640');
+  const [avatarImg, setAvatarImg] = useState('http://placekitten.com/64');
 
   console.log('profile', isLoggedIn);
   console.log('profile userData: ', user);
@@ -34,10 +34,8 @@ const Profile = ({navigation}) => {
   }, []);
 
   return (
-    <SafeAreaView
-      style={{flex: 1, justifyContent: 'space-around', alignItems: 'center'}}
-    >
-      <View style={{flexDirection: 'row', padding: 10}}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.usernameDetails}>
         <Icon name="person" size={24} />
         <Text style={styles.text}>Username: {user.username}</Text>
       </View>
@@ -65,6 +63,12 @@ const Profile = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+
   text: {
     flex: 1,
     marginLeft: 10,
@@ -75,10 +79,14 @@ const styles = StyleSheet.create({
 
   textBody: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 20,
     fontSize: 14,
     color: 'black',
     fontWeight: '500',
+  },
+  usernameDetails: {
+    flexDirection: 'row',
+    padding: 10,
   },
 });
 

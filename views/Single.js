@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, SafeAreaView, ActivityIndicator} from 'react-native';
+import {View, SafeAreaView, ActivityIndicator, StyleSheet} from 'react-native';
 import {Text, Card, Icon} from 'react-native-elements';
 import PropTypes from 'prop-types';
 
@@ -9,35 +9,46 @@ const Single = ({route, navigation}) => {
   const {file} = route.params;
   console.log(file);
   return (
-    <SafeAreaView
-      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
-    >
+    <SafeAreaView style={styles.container}>
       <Card>
         <Card.Image
           source={{uri: url + file.filename}}
-          style={{
-            width: 400,
-            height: 400,
-          }}
+          style={styles.cardImg}
           PlaceholderContent={<ActivityIndicator />}
         />
         <Card.Divider />
-        <Card.Title style={{fontSize: 32}}>{file.title}</Card.Title>
-        <View style={{flexDirection: 'row', padding: 10}}>
+        <Card.Title style={styles.cardTitle}>{file.title}</Card.Title>
+        <View style={styles.cardDetails}>
           <Icon name="book" size={32} />
-          <Text
-            style={{
-              flex: 1,
-              marginLeft: 10,
-            }}
-          >
-            {file.description}{' '}
-          </Text>
+          <Text style={styles.text}>{file.description} </Text>
         </View>
       </Card>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardDetails: {
+    flexDirection: 'row',
+    padding: 10,
+  },
+  cardImg: {
+    width: 300,
+    height: 300,
+  },
+  cardTitle: {
+    fontSize: 32,
+  },
+  text: {
+    flex: 1,
+    marginLeft: 10,
+  },
+});
 
 Single.propTypes = {
   route: PropTypes.object,

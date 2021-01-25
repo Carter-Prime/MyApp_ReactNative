@@ -1,6 +1,11 @@
-import React, {useContext, useEffect} from 'react';
-import {KeyboardAvoidingView, StatusBar, StyleSheet} from 'react-native';
-import {Text, Card} from 'react-native-elements';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  KeyboardAvoidingView,
+  StatusBar,
+  StyleSheet,
+  ImageBackground,
+} from 'react-native';
+import {Card, Text, Button} from 'react-native-elements';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,13 +15,12 @@ import RegisterForm from '../components/RegisterForm';
 import {useUser} from '../components/hooks/ApiHooks';
 
 const Login = ({navigation}) => {
-  const {isLoggedIn, setIsLoggedIn, setUser, loaded} = useContext(MainContext);
-  console.log(isLoggedIn);
+  const {setIsLoggedIn, setUser, loaded} = useContext(MainContext);
+  const [formToggle, setFormToggle] = useState(true);
   const {checkToken} = useUser();
 
   const getToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
-    console.log('token', userToken);
     if (userToken) {
       try {
         const userData = await checkToken(userToken);
@@ -36,33 +40,66 @@ const Login = ({navigation}) => {
     return null;
   } else {
     return (
-      <KeyboardAvoidingView style={styles.container}>
-        <StatusBar backgroundColor="black" barStyle="light-content" />
-        <Card containerStyle={styles.loginContainer}>
-          <Card.Title>Login</Card.Title>
-          <Card.Divider />
-          <LoginForm navigation={navigation} />
-        </Card>
-        <Card containerStyle={styles.registerContainer}>
-          <Card.Title>Registration</Card.Title>
-          <Card.Divider />
-          <RegisterForm navigation={navigation} />
-        </Card>
-      </KeyboardAvoidingView>
+      <ImageBackground
+        source={require('../assets/image/watercolor-blue.png')}
+        style={styles.container}
+      >
+        <KeyboardAvoidingView style={styles.container}>
+          <StatusBar backgroundColor="black" barStyle="light-content" />
+          <Text h1 h1Style={styles.Title}>
+            My App
+          </Text>
+          {formToggle ? (
+            <Card>
+              <Card.Title>Login</Card.Title>
+              <Card.Divider />
+              <LoginForm navigation={navigation} style={styles.formContainer} />
+            </Card>
+          ) : (
+            <Card>
+              <Card.Title>Registration</Card.Title>
+              <Card.Divider />
+              <RegisterForm
+                navigation={navigation}
+                style={styles.formContainer}
+              />
+            </Card>
+          )}
+          <Button
+            containerStyle={styles.toggleBtn}
+            title="Toggle"
+            onPress={() => {
+              setFormToggle(!formToggle);
+            }}
+          />
+        </KeyboardAvoidingView>
+      </ImageBackground>
     );
   }
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  Title: {
+    flex: 1,
+    textAlign: 'center',
+    width: '100%',
+    marginTop: 40,
+  },
+  formContainer: {
+    flex: 3,
+    width: '90%',
+    marginBottom: 20,
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+  },
+  toggleBtn: {
+    flex: 1,
+    width: '80%',
+    alignSelf: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loginContainer: {
-    width: '80%',
-  },
-  registerContainer: {
-    width: '80%',
   },
 });
 
