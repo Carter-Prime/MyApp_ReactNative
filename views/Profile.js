@@ -6,12 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar, Text, Icon, Button} from 'react-native-elements';
 import {useTag} from '../components/hooks/ApiHooks';
 
-const url = 'http://media.mw.metropolia.fi/wbma/uploads/';
+const url = 'https://media.mw.metropolia.fi/wbma/uploads/';
 
 const Profile = ({navigation}) => {
   const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
   const {getFilesByTag} = useTag();
-  const [avatarImg, setAvatarImg] = useState('http://placekitten.com/64');
+  const [avatarImg, setAvatarImg] = useState('https://placekitten.com/64');
 
   console.log('profile', isLoggedIn);
   console.log('profile userData: ', user);

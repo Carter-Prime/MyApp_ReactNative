@@ -11,7 +11,12 @@ import useSignUpForm from './hooks/RegisterHooks';
 
 const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
-  const {inputs, handleInputChange} = useSignUpForm();
+  const {
+    inputs,
+    handleInputChange,
+    usernameError,
+    checkUserAvailable,
+  } = useSignUpForm();
   const {postRegister} = useUser();
   const {postLogin} = useLogin();
 
@@ -36,6 +41,10 @@ const RegisterForm = ({navigation}) => {
         autoCapitalize="none"
         placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
+        onEndEditing={(event) => {
+          checkUserAvailable(event);
+        }}
+        errorMessage={usernameError}
       />
       <FormTextInput
         autoCapitalize="none"

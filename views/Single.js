@@ -3,7 +3,7 @@ import {View, SafeAreaView, ActivityIndicator, StyleSheet} from 'react-native';
 import {Text, Card, Icon} from 'react-native-elements';
 import PropTypes from 'prop-types';
 
-const url = 'http://media.mw.metropolia.fi/wbma/uploads/';
+const url = 'https://media.mw.metropolia.fi/wbma/uploads/';
 
 const Single = ({route, navigation}) => {
   const {file} = route.params;

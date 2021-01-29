@@ -1,13 +1,20 @@
 import {useState, useEffect} from 'react';
 
-const apiUrl = 'http://media.mw.metropolia.fi/wbma/';
+const apiUrl = 'https://media-new.mw.metropolia.fi/wbma/';
 
 const doFetch = async (url, options = {}) => {
   const response = await fetch(url, options);
-  if (!response.ok) {
+  const json = await response.json();
+  if (json.error) {
+    // if API response contains error message (use Postman to get further details)
+    throw new Error(json.message + ': ' + json.error);
+  } else if (!response.ok) {
+    // if API response does not contain error message, but there is some other error
     throw new Error('doFetch failed');
+  } else {
+    // if all goes well
+    return json;
   }
-  return await response.json();
 };
 
 const useLoadMedia = () => {
@@ -101,7 +108,16 @@ const useUser = () => {
       throw new Error(error.message);
     }
   };
-  return {postRegister, checkToken};
+
+  const checkIsUserAvailable = async (username) => {
+    try {
+      const result = await doFetch(apiUrl + 'users/username/' + username);
+      return result.available;
+    } catch (error) {
+      throw new Error('apihooks checkIsUserAvailable', error.message);
+    }
+  };
+  return {postRegister, checkToken, checkIsUserAvailable};
 };
 
 const useTag = () => {

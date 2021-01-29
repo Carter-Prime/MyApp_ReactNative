@@ -1,6 +1,10 @@
 import {useState} from 'react';
+import {useUser} from '../hooks/ApiHooks';
 
 const useSignUpForm = (callback) => {
+  const [usernameError, setUsernameError] = useState('');
+  const {checkIsUserAvailable} = useUser();
+
   const [inputs, setInputs] = useState({
     username: '',
     password: '',
@@ -9,8 +13,6 @@ const useSignUpForm = (callback) => {
   });
 
   const handleInputChange = (name, text) => {
-    // console.log(name, text);
-    // console.log('inputs state', inputs);
     setInputs((inputs) => {
       return {
         ...inputs,
@@ -18,9 +20,24 @@ const useSignUpForm = (callback) => {
       };
     });
   };
+  const checkUserAvailable = async (event) => {
+    try {
+      const result = await checkIsUserAvailable(event.nativeEvent.text);
+      if (!result) {
+        setUsernameError('Username already exists');
+      } else {
+        setUsernameError('');
+      }
+    } catch (error) {
+      console.error('reg checkUserAvailable', error);
+    }
+  };
+
   return {
     handleInputChange,
     inputs,
+    usernameError,
+    checkUserAvailable,
   };
 };
 

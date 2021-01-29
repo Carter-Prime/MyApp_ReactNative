@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   formContainer: {
-    flex: 3,
+    flex: 4,
     width: '90%',
     marginBottom: 20,
     justifyContent: 'space-around',

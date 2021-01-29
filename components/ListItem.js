@@ -2,7 +2,7 @@ import React from 'react';
 import {Avatar, ListItem as RNEListItem} from 'react-native-elements';
 import PropTypes from 'prop-types';
 
-const url = 'http://media.mw.metropolia.fi/wbma/uploads/';
+const url = 'https://media-new.mw.metropolia.fi/wbma/uploads/';
 
 const ListItem = ({singleMedia, navigation}) => {
   return (
