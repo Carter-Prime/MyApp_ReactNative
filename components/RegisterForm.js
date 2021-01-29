@@ -1,21 +1,22 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Alert, View} from 'react-native';
-import {Button} from 'react-native-elements';
 import PropTypes from 'prop-types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import {MainContext} from '../contexts/MainContext';
-import {useUser, useLogin} from './hooks/ApiHooks';
-import FormTextInput from './FormTextInput';
+import {useLogin, useUser} from './hooks/ApiHooks';
 import useSignUpForm from './hooks/RegisterHooks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useContext} from 'react';
+import {MainContext} from '../contexts/MainContext';
+import {Input, Button} from 'react-native-elements';
 
 const RegisterForm = ({navigation}) => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {
     inputs,
     handleInputChange,
+    handleInputEnd,
     usernameError,
     checkUserAvailable,
+    registerErrors,
   } = useSignUpForm();
   const {postRegister} = useUser();
   const {postLogin} = useLogin();
@@ -25,44 +26,59 @@ const RegisterForm = ({navigation}) => {
       const result = await postRegister(inputs);
       console.log('doRegister ok', result.message);
       Alert.alert(result.message);
+      // do automatic login after registering
       const userData = await postLogin(inputs);
       await AsyncStorage.setItem('userToken', userData.token);
       setIsLoggedIn(true);
-      setUser(userData);
+      setUser(userData.user);
     } catch (error) {
       console.log('registration error', error);
-      Alert.alert('register fail', error.message);
+      Alert.alert(error.message);
     }
   };
 
   return (
     <View>
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
         onEndEditing={(event) => {
-          checkUserAvailable(event);
+          // console.log(event.nativeEvent.text);
+          // checkUserAvailable(event);
+          handleInputEnd('username', event.nativeEvent.text);
         }}
-        errorMessage={usernameError}
+        errorMessage={registerErrors.username}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="password"
         onChangeText={(txt) => handleInputChange('password', txt)}
+        onEndEditing={(event) =>
+          handleInputEnd('password', event.nativeEvent.text)
+        }
         secureTextEntry={true}
+        errorMessage={registerErrors.password}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="email"
         onChangeText={(txt) => handleInputChange('email', txt)}
+        onEndEditing={(event) =>
+          handleInputEnd('email', event.nativeEvent.text)
+        }
+        errorMessage={registerErrors.email}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="full name"
         onChangeText={(txt) => handleInputChange('full_name', txt)}
+        onEndEditing={(event) =>
+          handleInputEnd('full_name', event.nativeEvent.text)
+        }
+        errorMessage={registerErrors.full_name}
       />
-      <Button title="Register" raised onPress={doRegister} />
+      <Button title="Register!" onPress={doRegister} />
     </View>
   );
 };
