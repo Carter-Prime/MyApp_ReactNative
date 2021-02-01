@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import axios from 'axios';
 
 const apiUrl = 'https://media-new.mw.metropolia.fi/wbma/';
 
@@ -133,4 +134,25 @@ const useTag = () => {
   return {getFilesByTag};
 };
 
-export {useLoadMedia, useLogin, useUser, useTag};
+const useMedia = () => {
+  const upload = async (fd, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+      },
+      data: fd,
+      url: apiUrl + 'media',
+    };
+    try {
+      const uploadResponse = await axios(options);
+      return uploadResponse;
+    } catch (e) {
+      console.log('ApiHooks register', e.message);
+      throw new Error(e.message);
+    }
+  };
+  return {upload};
+};
+
+export {useLoadMedia, useLogin, useUser, useTag, useMedia};

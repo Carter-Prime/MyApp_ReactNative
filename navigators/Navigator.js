@@ -7,7 +7,7 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import PropTypes from 'prop-types';
 
-import {Home, Profile, Single, Login} from '../views/index';
+import {Home, Profile, Single, Login, Upload} from '../views/index';
 import {MainContext} from '../contexts/MainContext';
 import ActionBarIcon from '../components/ActionBarIcon';
 import Icon from 'react-native-vector-icons/Feather';
@@ -63,6 +63,8 @@ const TabScreen = () => {
         iconName = focused ? 'home' : 'home';
       } else if (route.name === 'Profile') {
         iconName = focused ? 'user' : 'user';
+      } else if (route.name === 'Upload') {
+        iconName = focused ? 'upload-cloud' : 'upload-cloud';
       }
 
       return <Icon name={iconName} size={30} color={color} />;
@@ -79,6 +81,7 @@ const TabScreen = () => {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Upload" component={Upload} />
     </Tab.Navigator>
   );
 };
