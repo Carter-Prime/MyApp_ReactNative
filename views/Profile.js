@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar, Text, Icon, Button} from 'react-native-elements';
 import {useTag} from '../components/hooks/ApiHooks';
 
-const url = 'https://media.mw.metropolia.fi/wbma/uploads/';
+const url = 'https://media-new.mw.metropolia.fi/wbma/uploads/';
 
 const Profile = ({navigation}) => {
   const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
