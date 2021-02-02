@@ -67,7 +67,6 @@ const useLogin = () => {
 
 const useUser = () => {
   const postRegister = async (inputs) => {
-    console.log('trying to create user', inputs);
     const fetchOptions = {
       method: 'POST',
       headers: {
@@ -78,7 +77,6 @@ const useUser = () => {
     try {
       const registerResponse = await fetch(apiUrl + 'users', fetchOptions);
       const registerJson = await registerResponse.json();
-      console.log('register resp', registerJson);
       if (registerResponse.ok) {
         return registerJson;
       } else {
@@ -125,7 +123,7 @@ const useTag = () => {
   const getFilesByTag = async (tag) => {
     try {
       const filesByTag = await doFetch(apiUrl + 'tags/' + tag);
-      console.log(filesByTag);
+      // console.log('filesByTag Array', filesByTag);
       return filesByTag;
     } catch (error) {
       throw new Error(error.message);

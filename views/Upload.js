@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {Platform} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {Input, Text, Image, Button} from 'react-native-elements';
 import useUploadForm from './../components/hooks/UploadHooks';
 import {useMedia} from './../components/hooks/ApiHooks';
 import {ScrollView} from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StackActions} from '@react-navigation/native';
+import PropTypes from 'prop-types';
 
-const Upload = () => {
+const Upload = ({navigation}) => {
   const [image, setImage] = useState(null);
   const {
     inputs,
@@ -27,7 +29,12 @@ const Upload = () => {
     try {
       const userToken = await AsyncStorage.getItem('userToken');
       const resp = await upload(formData, userToken);
-      console.log('upload response', resp);
+      if (resp.status === 201) {
+        setTimeout(() => {
+          const pushAction = StackActions.push('Home');
+          navigation.dispatch(pushAction);
+        }, 1000);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -101,11 +108,36 @@ const Upload = () => {
       <Button
         title="Select File from Library"
         onPress={() => pickImage(true)}
+        type="solid"
+        raised
+        containerStyle={styles.button}
       />
-      <Button title="Use Camera" onPress={() => pickImage(false)} />
-      <Button title="Upload File" onPress={doUpload} />
+      <Button
+        title="Use Camera"
+        onPress={() => pickImage(false)}
+        type="solid"
+        raised
+        containerStyle={styles.button}
+      />
+      <Button
+        title="Upload File"
+        onPress={doUpload}
+        type="solid"
+        raised
+        containerStyle={styles.button}
+      />
     </ScrollView>
   );
+};
+
+const styles = StyleSheet.create({
+  button: {
+    margin: 10,
+  },
+});
+
+Upload.propTypes = {
+  navigation: PropTypes.object,
 };
 
 export default Upload;

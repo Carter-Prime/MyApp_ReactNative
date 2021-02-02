@@ -10,7 +10,7 @@ import useLoginForm from './hooks/LoginHooks';
 
 const LoginForm = ({navigation}) => {
   const [loading, setLoading] = useState(false);
-  const {setIsLoggedIn} = useContext(MainContext);
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useLoginForm();
   const {postLogin} = useLogin();
 
@@ -19,6 +19,7 @@ const LoginForm = ({navigation}) => {
     try {
       const userData = await postLogin(inputs);
       if (userData) {
+        setUser(userData.user);
         setIsLoggedIn(true);
       }
       await AsyncStorage.setItem('userToken', userData.token);

@@ -9,28 +9,27 @@ import {useTag} from '../components/hooks/ApiHooks';
 const url = 'https://media-new.mw.metropolia.fi/wbma/uploads/';
 
 const Profile = ({navigation}) => {
-  const {isLoggedIn, setIsLoggedIn, user} = useContext(MainContext);
+  const {setIsLoggedIn, user} = useContext(MainContext);
   const {getFilesByTag} = useTag();
   const [avatarImg, setAvatarImg] = useState('https://placekitten.com/64');
-
-  console.log('profile', isLoggedIn);
-  console.log('profile userData: ', user);
 
   const logout = async () => {
     setIsLoggedIn(false);
     await AsyncStorage.clear();
     navigation.navigate('Login');
   };
-  const loadAvatar = async () => {
-    try {
-      const getAvatarImage = await getFilesByTag('Avatar_' + user.user_id);
-      setAvatarImg(url + getAvatarImage.pop().filename);
-    } catch (error) {
-      console.error('getAvatar error', error);
-    }
-  };
   useEffect(() => {
-    loadAvatar();
+    const fetchAvatar = async () => {
+      try {
+        const avatarList = await getFilesByTag('Avatar_' + user.user_id);
+        if (avatarList.length > 0) {
+          setAvatarImg(url + avatarList.pop().filename);
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchAvatar();
   }, []);
 
   return (
