@@ -1,5 +1,6 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
+import {MainContext} from '../../contexts/MainContext.js';
 
 const apiUrl = 'https://media-new.mw.metropolia.fi/wbma/';
 
@@ -20,6 +21,7 @@ const doFetch = async (url, options = {}) => {
 
 const useLoadMedia = () => {
   const [mediaArray, setMediaArray] = useState([]);
+  const {update} = useContext(MainContext);
 
   const loadMedia = async (limit = 10) => {
     try {
@@ -40,8 +42,8 @@ const useLoadMedia = () => {
   };
 
   useEffect(() => {
-    loadMedia();
-  }, []);
+    loadMedia(10);
+  }, [update]);
   return mediaArray;
 };
 
@@ -146,7 +148,7 @@ const useMedia = () => {
       const uploadResponse = await axios(options);
       return uploadResponse;
     } catch (e) {
-      console.log('ApiHooks register', e.message);
+      console.log('ApiHooks upload', e.message);
       throw new Error(e.message);
     }
   };

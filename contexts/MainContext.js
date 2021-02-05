@@ -7,6 +7,7 @@ const MainContext = React.createContext({});
 const MainProvider = ({children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
+  const [update, setUpdate] = useState(0);
   const [loaded, setLoaded] = useFonts({
     McLarenRegular: require('../assets/fonts/McLaren-Regular.ttf'),
     MontserratRegular: require('../assets/fonts/Montserrat-Regular.ttf'),
@@ -15,7 +16,16 @@ const MainProvider = ({children}) => {
 
   return (
     <MainContext.Provider
-      value={{isLoggedIn, setIsLoggedIn, user, setUser, loaded, setLoaded}}
+      value={{
+        isLoggedIn,
+        setIsLoggedIn,
+        user,
+        setUser,
+        loaded,
+        setLoaded,
+        update,
+        setUpdate,
+      }}
     >
       {children}
     </MainContext.Provider>
