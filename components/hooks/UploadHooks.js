@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {validator} from '../../utils/validator';
 
 const constraints = {
-  Title: {
+  title: {
     presence: {
       message: 'cannot be empty',
     },

@@ -101,7 +101,7 @@ const Upload = ({navigation}) => {
         value={inputs.description}
         onChangeText={(txt) => handleInputChange('description', txt)}
         onEndEditing={(event) => {
-          handleInputEnd('title', event.nativeEvent.text);
+          handleInputEnd('description', event.nativeEvent.text);
         }}
         errorMessage={uploadErrors.description}
       />
