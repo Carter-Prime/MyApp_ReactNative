@@ -1,9 +1,9 @@
-import {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
-import {MainContext} from '../../contexts/MainContext.js';
+import {useContext, useEffect, useState} from 'react';
+import {MainContext} from '../../contexts/MainContext';
+import {appIdentifier, baseUrl} from '../../utils/variables';
 
-const apiUrl = 'https://media-new.mw.metropolia.fi/wbma/';
-
+// general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
   const response = await fetch(url, options);
   const json = await response.json();
@@ -19,30 +19,34 @@ const doFetch = async (url, options = {}) => {
   }
 };
 
-const useLoadMedia = () => {
+const useLoadMedia = (all = true, limit = 10) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update} = useContext(MainContext);
 
-  const loadMedia = async (limit = 10) => {
+  const loadMedia = async () => {
     try {
-      const mediaListResponse = await fetch(apiUrl + 'media?limit=' + limit);
-      const mediaListJson = await mediaListResponse.json();
-
+      let listJson;
+      if (all) {
+        listJson = await doFetch(baseUrl + 'media?limit=' + limit);
+      } else {
+        listJson = await doFetch(baseUrl + 'tags/' + appIdentifier);
+      }
       const media = await Promise.all(
-        mediaListJson.map(async (item) => {
-          const fileResponse = await fetch(apiUrl + 'media/' + item.file_id);
-          const fileJson = await fileResponse.json();
+        listJson.map(async (item) => {
+          const fileJson = await doFetch(baseUrl + 'media/' + item.file_id);
           return fileJson;
         })
       );
       setMediaArray(media);
     } catch (error) {
-      console.error('loadMedia error', error);
+      console.error('loadMedia error', error.message);
     }
   };
-
   useEffect(() => {
-    loadMedia(10);
+    // loads everything
+    // loadMedia(true, 10);
+    // loads by app id
+    loadMedia();
   }, [update]);
   return mediaArray;
 };
@@ -51,16 +55,14 @@ const useLogin = () => {
   const postLogin = async (userCredentials) => {
     const options = {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(userCredentials),
     };
     try {
-      const userDataJson = await doFetch(apiUrl + 'login', options);
-      return userDataJson;
+      const userData = await doFetch(baseUrl + 'login', options);
+      return userData;
     } catch (error) {
-      throw new Error(error.message);
+      throw new Error('postLogin error: ' + error.message);
     }
   };
 
@@ -69,6 +71,7 @@ const useLogin = () => {
 
 const useUser = () => {
   const postRegister = async (inputs) => {
+    console.log('trying to create user', inputs);
     const fetchOptions = {
       method: 'POST',
       headers: {
@@ -77,34 +80,22 @@ const useUser = () => {
       body: JSON.stringify(inputs),
     };
     try {
-      const registerResponse = await fetch(apiUrl + 'users', fetchOptions);
-      const registerJson = await registerResponse.json();
-      if (registerResponse.ok) {
-        return registerJson;
-      } else {
-        throw new Error(registerJson.message + ': ' + registerJson.error);
-      }
+      const json = await doFetch(baseUrl + 'users', fetchOptions);
+      console.log('register resp', json);
+      return json;
     } catch (e) {
-      console.log('ApiHooks register', e.message);
       throw new Error(e.message);
     }
   };
 
   const checkToken = async (token) => {
-    const options = {
-      method: 'GET',
-      headers: {
-        'x-access-token': token,
-      },
-    };
     try {
-      const checkTokenResponse = await fetch(apiUrl + 'users/user', options);
-      const userData = checkTokenResponse.json();
-      if (checkTokenResponse.ok) {
-        return userData;
-      } else {
-        throw new Error(userData.message);
-      }
+      const options = {
+        method: 'GET',
+        headers: {'x-access-token': token},
+      };
+      const userData = await doFetch(baseUrl + 'users/user', options);
+      return userData;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -112,43 +103,55 @@ const useUser = () => {
 
   const checkIsUserAvailable = async (username) => {
     try {
-      const result = await doFetch(apiUrl + 'users/username/' + username);
+      const result = await doFetch(baseUrl + 'users/username/' + username);
       return result.available;
     } catch (error) {
       throw new Error('apihooks checkIsUserAvailable', error.message);
     }
   };
+
   return {postRegister, checkToken, checkIsUserAvailable};
 };
 
 const useTag = () => {
   const getFilesByTag = async (tag) => {
     try {
-      const filesByTag = await doFetch(apiUrl + 'tags/' + tag);
-      // console.log('filesByTag Array', filesByTag);
-      return filesByTag;
+      const tagList = await doFetch(baseUrl + 'tags/' + tag);
+      return tagList;
     } catch (error) {
       throw new Error(error.message);
     }
   };
-  return {getFilesByTag};
+  const postTag = async (tag, token) => {
+    const options = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'x-access-token': token},
+      body: JSON.stringify(tag),
+    };
+    try {
+      const result = await doFetch(baseUrl + 'tags', options);
+      return result;
+    } catch (error) {
+      throw new Error('postTag error: ' + error.message);
+    }
+  };
+
+  return {getFilesByTag, postTag};
 };
 
 const useMedia = () => {
   const upload = async (fd, token) => {
     const options = {
       method: 'POST',
-      headers: {
-        'x-access-token': token,
-      },
+      headers: {'x-access-token': token},
       data: fd,
-      url: apiUrl + 'media',
+      url: baseUrl + 'media',
     };
+    console.log('apihooks upload', options);
     try {
-      const uploadResponse = await axios(options);
-      return uploadResponse;
+      const response = await axios(options);
+      return response.data;
     } catch (e) {
-      console.log('ApiHooks upload', e.message);
       throw new Error(e.message);
     }
   };

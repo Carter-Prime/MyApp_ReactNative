@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar, Text, Icon, Button} from 'react-native-elements';
 import {useTag} from '../components/hooks/ApiHooks';
-
-const url = 'https://media-new.mw.metropolia.fi/wbma/uploads/';
+import {uploadUrl} from '../utils/variables.js';
 
 const Profile = ({navigation}) => {
   const {setIsLoggedIn, user, loaded} = useContext(MainContext);
@@ -23,7 +22,7 @@ const Profile = ({navigation}) => {
       try {
         const avatarList = await getFilesByTag('Avatar_' + user.user_id);
         if (avatarList.length > 0) {
-          setAvatarImg(url + avatarList.pop().filename);
+          setAvatarImg(uploadUrl + avatarList.pop().filename);
         }
       } catch (error) {
         console.error(error.message);

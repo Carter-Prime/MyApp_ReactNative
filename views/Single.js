@@ -7,6 +7,7 @@ const url = 'https://media-new.mw.metropolia.fi/wbma/uploads/';
 
 const Single = ({route, navigation}) => {
   const {file} = route.params;
+  console.log(file);
   return (
     <SafeAreaView style={styles.container}>
       <Card>
