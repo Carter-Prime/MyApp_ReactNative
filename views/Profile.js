@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, SafeAreaView, StyleSheet} from 'react-native';
+import {View, SafeAreaView, StyleSheet, ActivityIndicator} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,7 @@ import {useTag} from '../components/hooks/ApiHooks';
 const url = 'https://media-new.mw.metropolia.fi/wbma/uploads/';
 
 const Profile = ({navigation}) => {
-  const {setIsLoggedIn, user} = useContext(MainContext);
+  const {setIsLoggedIn, user, loaded} = useContext(MainContext);
   const {getFilesByTag} = useTag();
   const [avatarImg, setAvatarImg] = useState('https://placekitten.com/64');
 
@@ -32,6 +32,9 @@ const Profile = ({navigation}) => {
     fetchAvatar();
   }, []);
 
+  if (!loaded) {
+    <ActivityIndicator size="large" color="#0000ff" />;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.usernameDetails}>
@@ -82,6 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'black',
     fontWeight: '500',
+    fontFamily: 'ProximaSoftMedium',
   },
   usernameDetails: {
     flexDirection: 'row',

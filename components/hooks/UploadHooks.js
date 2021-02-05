@@ -49,6 +49,14 @@ const useUploadForm = (callback) => {
     });
   };
 
+  const reset = () => {
+    setInputs({
+      title: '',
+      description: '',
+    });
+    setUploadErrors({});
+  };
+
   const validateOnSend = () => {
     const titleError = validator('title', inputs.title, constraints);
     const descriptionError = validator(
@@ -78,6 +86,7 @@ const useUploadForm = (callback) => {
     handleInputEnd,
     validateOnSend,
     uploadErrors,
+    reset,
   };
 };
 

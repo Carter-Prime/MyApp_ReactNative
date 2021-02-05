@@ -19,6 +19,7 @@ const Upload = ({navigation}) => {
     handleInputChange,
     handleInputEnd,
     uploadErrors,
+    reset,
   } = useUploadForm();
   const {upload} = useMedia();
 
@@ -50,6 +51,7 @@ const Upload = ({navigation}) => {
               text: 'Ok',
               onPress: () => {
                 setUpdate(update + 1);
+                doReset();
                 navigation.navigate('Home');
               },
             },
@@ -75,6 +77,11 @@ const Upload = ({navigation}) => {
       }
     })();
   }, []);
+
+  const doReset = () => {
+    setImage(null);
+    reset();
+  };
 
   const pickImage = async (library) => {
     let result = null;
@@ -148,6 +155,13 @@ const Upload = ({navigation}) => {
       <Button
         title="Upload File"
         onPress={doUpload}
+        type="solid"
+        raised
+        containerStyle={styles.button}
+      />
+      <Button
+        title="Reset"
+        onPress={doReset}
         type="solid"
         raised
         containerStyle={styles.button}
