@@ -20,6 +20,7 @@ const LoginForm = ({navigation}) => {
       const userData = await postLogin(inputs);
       if (userData) {
         setUser(userData.user);
+        await AsyncStorage.setItem('userToken', userData.token);
         setIsLoggedIn(true);
       }
       await AsyncStorage.setItem('userToken', userData.token);

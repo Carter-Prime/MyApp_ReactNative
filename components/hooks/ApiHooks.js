@@ -2,6 +2,7 @@ import axios from 'axios';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../../contexts/MainContext';
 import {appIdentifier, baseUrl} from '../../utils/variables';
+import {AsyncStorage} from '@react-native-async-storage/async-storage';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
@@ -60,6 +61,7 @@ const useLogin = () => {
     };
     try {
       const userData = await doFetch(baseUrl + 'login', options);
+      console.log('useLogin userData', userData);
       return userData;
     } catch (error) {
       throw new Error('postLogin error: ' + error.message);
@@ -101,6 +103,19 @@ const useUser = () => {
     }
   };
 
+  const getUser = async (id, token) => {
+    try {
+      const options = {
+        method: 'GET',
+        headers: {'x-access-token': token},
+      };
+      const userData = await doFetch(baseUrl + 'users/' + id, options);
+      return userData;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+
   const checkIsUserAvailable = async (username) => {
     try {
       const result = await doFetch(baseUrl + 'users/username/' + username);
@@ -110,7 +125,7 @@ const useUser = () => {
     }
   };
 
-  return {postRegister, checkToken, checkIsUserAvailable};
+  return {postRegister, checkToken, checkIsUserAvailable, getUser};
 };
 
 const useTag = () => {

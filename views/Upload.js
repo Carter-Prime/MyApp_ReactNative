@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useMedia, useTag} from '../components/hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {appIdentifier} from '../utils/variables';
+import {Video} from 'expo-av';
 
 const Upload = ({navigation}) => {
   const [image, setImage] = useState(null);
@@ -123,11 +124,22 @@ const Upload = ({navigation}) => {
         <Card>
           <Text h4>Upload media file</Text>
           {image && (
-            <Image
-              source={{uri: image}}
-              style={{width: '100%', height: undefined, aspectRatio: 1}}
-            />
+            <>
+              {filetype === 'image' ? (
+                <Image
+                  source={{uri: image}}
+                  style={{width: '100%', height: undefined, aspectRatio: 1}}
+                />
+              ) : (
+                <Video
+                  source={{uri: image}}
+                  style={{width: '100%', height: undefined, aspectRatio: 1}}
+                  useNativeControls={true}
+                />
+              )}
+            </>
           )}
+
           <Input
             placeholder="title"
             value={inputs.title}
