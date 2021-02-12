@@ -2,7 +2,6 @@ import axios from 'axios';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../../contexts/MainContext';
 import {appIdentifier, baseUrl} from '../../utils/variables';
-import {AsyncStorage} from '@react-native-async-storage/async-storage';
 
 // general function for fetching (options default value is empty object)
 const doFetch = async (url, options = {}) => {
@@ -20,33 +19,28 @@ const doFetch = async (url, options = {}) => {
   }
 };
 
-const useLoadMedia = (all = true, limit = 10) => {
+const useLoadMedia = (myFilesOnly, userId) => {
   const [mediaArray, setMediaArray] = useState([]);
   const {update} = useContext(MainContext);
 
   const loadMedia = async () => {
     try {
-      let listJson;
-      if (all) {
-        listJson = await doFetch(baseUrl + 'media?limit=' + limit);
-      } else {
-        listJson = await doFetch(baseUrl + 'tags/' + appIdentifier);
-      }
-      const media = await Promise.all(
+      const listJson = await doFetch(baseUrl + 'tags/' + appIdentifier);
+      let media = await Promise.all(
         listJson.map(async (item) => {
           const fileJson = await doFetch(baseUrl + 'media/' + item.file_id);
           return fileJson;
         })
       );
+      if (myFilesOnly) {
+        media = media.filter((item) => item.user_id === userId);
+      }
       setMediaArray(media);
     } catch (error) {
       console.error('loadMedia error', error.message);
     }
   };
   useEffect(() => {
-    // loads everything
-    // loadMedia(true, 10);
-    // loads by app id
     loadMedia();
   }, [update]);
   return mediaArray;
@@ -61,7 +55,6 @@ const useLogin = () => {
     };
     try {
       const userData = await doFetch(baseUrl + 'login', options);
-      console.log('useLogin userData', userData);
       return userData;
     } catch (error) {
       throw new Error('postLogin error: ' + error.message);
@@ -170,7 +163,38 @@ const useMedia = () => {
       throw new Error(e.message);
     }
   };
-  return {upload};
+
+  const updateFile = async (fileId, fileInfo, token) => {
+    const options = {
+      method: 'PUT',
+      headers: {
+        'x-access-token': token,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(fileInfo),
+    };
+    try {
+      const result = await doFetch(baseUrl + 'media/' + fileId, options);
+      return result;
+    } catch (error) {
+      throw new Error('updateFile error: ' + error.message);
+    }
+  };
+
+  const deleteFile = async (fileId, token) => {
+    const options = {
+      method: 'DELETE',
+      headers: {'x-access-token': token},
+    };
+    try {
+      const result = await doFetch(baseUrl + 'media/' + fileId, options);
+      return result;
+    } catch (error) {
+      throw new Error('deleteFile error: ' + error.message);
+    }
+  };
+
+  return {upload, updateFile, deleteFile};
 };
 
 export {useLoadMedia, useLogin, useUser, useTag, useMedia};

@@ -1,28 +1,28 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {View, SafeAreaView, StyleSheet, ActivityIndicator} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, ActivityIndicator} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Avatar, Text, Icon, Button} from 'react-native-elements';
+import {Card, Text, ListItem, Avatar} from 'react-native-elements';
 import {useTag} from '../components/hooks/ApiHooks';
-import {uploadUrl} from '../utils/variables.js';
+import {uploadsUrl} from '../utils/variables';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Profile = ({navigation}) => {
-  const {setIsLoggedIn, user, loaded} = useContext(MainContext);
+  const {setIsLoggedIn, user} = useContext(MainContext);
+  const [avatar, setAvatar] = useState('http://placekitten.com/640');
   const {getFilesByTag} = useTag();
-  const [avatarImg, setAvatarImg] = useState('https://placekitten.com/64');
-
   const logout = async () => {
     setIsLoggedIn(false);
     await AsyncStorage.clear();
-    navigation.navigate('Login');
   };
+
   useEffect(() => {
     const fetchAvatar = async () => {
       try {
-        const avatarList = await getFilesByTag('Avatar_' + user.user_id);
+        const avatarList = await getFilesByTag('avatar_' + user.user_id);
         if (avatarList.length > 0) {
-          setAvatarImg(uploadUrl + avatarList.pop().filename);
+          setAvatar(uploadsUrl + avatarList.pop().filename);
         }
       } catch (error) {
         console.error(error.message);
@@ -31,65 +31,46 @@ const Profile = ({navigation}) => {
     fetchAvatar();
   }, []);
 
-  if (!loaded) {
-    <ActivityIndicator size="large" color="#0000ff" />;
-  }
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.usernameDetails}>
-        <Icon name="person" size={24} />
-        <Text style={styles.text}>Username: {user.username}</Text>
-      </View>
-
-      <Avatar square source={{uri: avatarImg}} size={300} />
-      <View
-        style={{
-          flex: 0.15,
-          width: '100%',
-          alignItems: 'flex-start',
-        }}
-      >
-        <Text style={styles.textBody}>Fullname: {user.full_name}</Text>
-        <Text style={styles.textBody}>email: {user.email}</Text>
-      </View>
-
-      <Button
-        title={'Logout'}
-        raised
-        onPress={logout}
-        containerStyle={{width: 300}}
-      />
-    </SafeAreaView>
+    <ScrollView>
+      <Card>
+        <Card.Title>
+          <Text h1>{user.username}</Text>
+        </Card.Title>
+        <Card.Image
+          source={{uri: avatar}}
+          style={styles.image}
+          PlaceholderContent={<ActivityIndicator />}
+        />
+        <ListItem>
+          <Avatar icon={{name: 'email', color: 'black'}} />
+          <Text>{user.email}</Text>
+        </ListItem>
+        <ListItem>
+          <Avatar icon={{name: 'user', type: 'font-awesome', color: 'black'}} />
+          <Text>{user.full_name}</Text>
+        </ListItem>
+        <ListItem bottomDivider onPress={() => navigation.push('My Files')}>
+          <Avatar icon={{name: 'perm-media', color: 'black'}} />
+          <ListItem.Content>
+            <ListItem.Title>My Files</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem>
+        <ListItem bottomDivider onPress={logout}>
+          <Avatar icon={{name: 'logout', color: 'black'}} />
+          <ListItem.Content>
+            <ListItem.Title>Logout</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem>
+      </Card>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-
-  text: {
-    flex: 1,
-    marginLeft: 10,
-    fontSize: 16,
-    color: '#4392f1',
-    fontWeight: 'bold',
-  },
-
-  textBody: {
-    flex: 1,
-    marginLeft: 20,
-    fontSize: 14,
-    color: 'black',
-    fontWeight: '500',
-    fontFamily: 'ProximaSoftMedium',
-  },
-  usernameDetails: {
-    flexDirection: 'row',
-    padding: 10,
-  },
+  image: {width: '100%', height: undefined, aspectRatio: 1},
 });
 
 Profile.propTypes = {

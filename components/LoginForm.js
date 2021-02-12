@@ -1,51 +1,47 @@
 import React, {useContext, useState} from 'react';
-import {View} from 'react-native';
-import {Button} from 'react-native-elements';
+import {View, Alert} from 'react-native';
+import {Input, Button} from 'react-native-elements';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useLogin} from './hooks/ApiHooks';
-import FormTextInput from './FormTextInput';
-import useLoginForm from './hooks/LoginHooks';
+import {useLogin} from '../components/hooks/ApiHooks';
+import useLoginForm from '../components/hooks/LoginHooks';
 
 const LoginForm = ({navigation}) => {
   const [loading, setLoading] = useState(false);
-  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {inputs, handleInputChange} = useLoginForm();
   const {postLogin} = useLogin();
+  const {setUser, setIsLoggedIn} = useContext(MainContext);
 
   const doLogin = async () => {
     setLoading(true);
     try {
       const userData = await postLogin(inputs);
-      if (userData) {
-        setUser(userData.user);
-        await AsyncStorage.setItem('userToken', userData.token);
-        setIsLoggedIn(true);
-      }
+      setUser(userData.user);
+      setIsLoggedIn(true);
       await AsyncStorage.setItem('userToken', userData.token);
       setLoading(false);
     } catch (error) {
-      console.error('postLogin error', error);
-      alert.alert(error.message);
       setLoading(false);
+      console.error('postLogin error', error.message);
+      Alert.alert('Invalid username or password');
     }
   };
 
   return (
     <View>
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="username"
         onChangeText={(txt) => handleInputChange('username', txt)}
       />
-      <FormTextInput
+      <Input
         autoCapitalize="none"
         placeholder="password"
         onChangeText={(txt) => handleInputChange('password', txt)}
         secureTextEntry={true}
       />
-      <Button title="Login" raised onPress={doLogin} loading={loading} />
+      <Button title="Login" onPress={doLogin} loading={loading} />
     </View>
   );
 };

@@ -5,12 +5,13 @@ import PropTypes from 'prop-types';
 
 const Home = (props) => {
   const {navigation} = props;
+
   return (
     <SafeAreaView>
       <StatusBar backgroundColor="black" barStyle="light-content" />
 
       <View>
-        <List navigation={navigation} />
+        <List navigation={navigation} myFilesOnly={false} />
       </View>
     </SafeAreaView>
   );
@@ -18,6 +19,7 @@ const Home = (props) => {
 
 Home.propTypes = {
   navigation: PropTypes.object,
+  myFilesOnly: PropTypes.bool,
 };
 
 export default Home;

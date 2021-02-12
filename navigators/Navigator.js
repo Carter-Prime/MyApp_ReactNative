@@ -7,7 +7,15 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import PropTypes from 'prop-types';
 
-import {Home, Profile, Single, Login, Upload} from '../views/index';
+import {
+  Home,
+  Profile,
+  Single,
+  Login,
+  Upload,
+  MyFiles,
+  Modify,
+} from '../views/index';
 import {MainContext} from '../contexts/MainContext';
 import ActionBarIcon from '../components/ActionBarIcon';
 import Icon from 'react-native-vector-icons/Feather';
@@ -100,6 +108,16 @@ const StackScreen = () => {
           <Stack.Screen
             name="Single"
             component={Single}
+            options={HeaderOptions}
+          />
+          <Stack.Screen
+            name="My Files"
+            component={MyFiles}
+            options={HeaderOptions}
+          />
+          <Stack.Screen
+            name="Modify"
+            component={Modify}
             options={HeaderOptions}
           />
         </>

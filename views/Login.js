@@ -1,21 +1,24 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
-  KeyboardAvoidingView,
-  StatusBar,
   StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
   ImageBackground,
 } from 'react-native';
-import {Card, Text, Button} from 'react-native-elements';
 import PropTypes from 'prop-types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import {MainContext} from '../contexts/MainContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useUser} from '../components/hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {useUser} from '../components/hooks/ApiHooks';
+import {Card, ListItem, Text} from 'react-native-elements';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Login = ({navigation}) => {
-  const {setIsLoggedIn, setUser, loaded} = useContext(MainContext);
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const [formToggle, setFormToggle] = useState(true);
   const {checkToken} = useUser();
 
@@ -26,80 +29,90 @@ const Login = ({navigation}) => {
         const userData = await checkToken(userToken);
         setIsLoggedIn(true);
         setUser(userData);
+        navigation.navigate('Home');
       } catch (error) {
-        console.error('getToken error', error);
+        console.log('token check failed', error.message);
       }
     }
   };
-
   useEffect(() => {
     getToken();
   }, []);
 
-  if (!loaded) {
-    return null;
-  } else {
-    return (
-      <ImageBackground
-        source={require('../assets/image/watercolor-blue.png')}
+  return (
+    <ScrollView contentContainerStyle={styles.sv}>
+      <KeyboardAvoidingView
         style={styles.container}
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        enabled
       >
-        <KeyboardAvoidingView style={styles.container}>
-          <StatusBar backgroundColor="black" barStyle="light-content" />
-          <Text h1 h1Style={styles.Title}>
-            My App
-          </Text>
-          {formToggle ? (
-            <Card>
-              <Card.Title>Login</Card.Title>
-              <Card.Divider />
-              <LoginForm navigation={navigation} style={styles.formContainer} />
-            </Card>
-          ) : (
-            <Card>
-              <Card.Title>Registration</Card.Title>
-              <Card.Divider />
-              <RegisterForm
-                navigation={navigation}
-                style={styles.formContainer}
-              />
-            </Card>
-          )}
-          <Button
-            containerStyle={styles.toggleBtn}
-            title="Toggle"
-            onPress={() => {
-              setFormToggle(!formToggle);
-            }}
-          />
-        </KeyboardAvoidingView>
-      </ImageBackground>
-    );
-  }
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.inner}>
+            <ImageBackground
+              source={require('../assets/image/watercolor-blue.png')}
+              style={styles.image}
+            >
+              <View style={styles.form}>
+                <Card>
+                  {formToggle ? (
+                    <>
+                      <Card.Title h5>Login</Card.Title>
+                      <Card.Divider />
+                      <LoginForm navigation={navigation} />
+                    </>
+                  ) : (
+                    <>
+                      <Card.Title h5>Register</Card.Title>
+                      <Card.Divider />
+                      <RegisterForm navigation={navigation} />
+                    </>
+                  )}
+                  <ListItem
+                    onPress={() => {
+                      setFormToggle(!formToggle);
+                    }}
+                  >
+                    <ListItem.Content>
+                      <Text style={styles.text}>
+                        {formToggle
+                          ? 'No account? Register here.'
+                          : 'Already registered? Login here.'}
+                      </Text>
+                    </ListItem.Content>
+                    <ListItem.Chevron />
+                  </ListItem>
+                </Card>
+              </View>
+            </ImageBackground>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
+  sv: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
   },
-  Title: {
+  inner: {
     flex: 1,
-    textAlign: 'center',
-    width: '100%',
-    marginTop: 40,
   },
-  formContainer: {
-    flex: 4,
-    width: '90%',
-    marginBottom: 20,
-    justifyContent: 'space-around',
-    alignSelf: 'center',
-  },
-  toggleBtn: {
+  image: {
     flex: 1,
-    width: '80%',
-    alignSelf: 'center',
+    resizeMode: 'cover',
     justifyContent: 'center',
+  },
+  form: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  text: {
+    alignSelf: 'center',
+    padding: 20,
   },
 });
 
